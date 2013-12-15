@@ -23,7 +23,6 @@
     <script type="text/javascript" src="css_url/lib/js/jquery.blockUI.js"></script>
     <!--self use:-->
     <script type="text/javascript" src="css_url/lib/js/upload.config.js"></script>
-    <script type="text/javascript" src="css_url/lib/js/pm.config.js"></script>
     <script type="text/javascript" src="css_url/lib/js/upload.starttest.js"></script>
 
     <!--Theme-->
@@ -122,15 +121,15 @@
 
             /* When the body has the loading class, we turn
        the scrollbar off with overflow:hidden */
-        /*body.loading {*/
-            /*overflow: hidden;*/
-        /*}*/
+        body.loading {
+            overflow: hidden;
+        }
 
-            /* Anytime the body has the loading class, our*/
-       /*modal element will be visible */
-        /*body.loading .modal {*/
-            /*display: block;*/
-        /*}*/
+            /* Anytime the body has the loading class, our
+       modal element will be visible */
+        body.loading .modal {
+            display: block;
+        }
             /*style to split line*/
         hr.grayhr {
             border: none;
@@ -149,33 +148,10 @@
         .wijmo-wijtree{
             border: none;
         }
-
-
     </style>
 
 
-<style type = "text/css">
 
-    .perf_chart{
-        position:relative;
-        float:left;
-        width: 600px;
-        height:400px;
-        border:1px solid;
-        margin:1em;
-        box-shadow: 10px 10px 5px #888888;
-
-    }
-
-    h3{text-align:center}
-
-    .ch_btn{
-        position:relative;
-        float:right;
-    }
-
-
-</style>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -183,7 +159,7 @@
             //global variables:
             var devinfo = {};
             var devid = '';
-            $('#loading').hide()
+            $('#loading').hide();
             function converListToLabel( list){
                 var newList = [];
                 $.map(list,function(data){
@@ -218,7 +194,6 @@
             //self:
             $(document).ajaxStart(function() {
 
-<<<<<<< HEAD
                 $.blockUI({ css: {
                     border: 'none',
                     padding: '15px',
@@ -234,30 +209,11 @@
             $(document).ajaxStop(function() {
                 $.unblockUI();
    //             $('#loading').hide();
-=======
-                //below are blocking whole page:
-//                $.blockUI({ css: {
-//                    border: 'none',
-//                    padding: '15px',
-//                    backgroundColor: '#000',
-//                    '-webkit-border-radius': '10px',
-//                    '-moz-border-radius': '10px',
-//                    opacity: .5,
-//                    color: '#fff'
-//                } });
-                //below are only showing the status bar:
-                $('#loading').show();
-            });
-
-            $(document).ajaxStop(function() {
-              //  $.unblockUI();
-                $('#loading').hide();
->>>>>>> 7cc9a1907e647512e0a18a3be3777b820346b71d
             });
            //hide the buttons
             // west panel tree
             $('#start_buttons').hide();
-            var tv = $(".tree").wijtree(
+            var tv = $("#tree").wijtree(
                     {
                         showExpandCollapse: false,//this is to expand the tree by default
                         autoCollapse: false
@@ -265,7 +221,7 @@
                     }
             );
             function getNode() {
-                return $(".tree").wijtree("findNodeByText", "Test iterations");
+                return $("#tree").wijtree("findNodeByText", "Test iterations");
 
             }
             //Add child node for node "Folder 1".
@@ -433,6 +389,11 @@
                         });
 
 
+
+
+
+
+
 //                        $("#dialog-dev").wijdialog({
 //                            autoOpen: true,
 //                            height: 'auto',
@@ -454,6 +415,9 @@
 
 
                 });
+
+
+
 
 
                 //Config page:
@@ -594,7 +558,6 @@
 
                     //empty chart list
                     $("#show_chart_left").empty();
-
                     //get chart list:
 
                     test1_config_obj.getChartList(faz_ip,faz_adom,testRunId,0,devid);
@@ -638,258 +601,10 @@
                     //get chart list:
                     test1_config_obj.getChartList(faz_ip,faz_adom,testRunId,1,devid);
                 });
-
-
             });
 
-            $('.p_testrun').click(function(){
-
-                var p_testRunId = $(this).attr('id');
-                //variables:
-                var faz_ip='',
-                        faz_model='VM64',
-                        faz_adom='root',
-                        faz_build='',
-                        faz_dev='';
-
-                //create a upload test config object:
-                var test1_config_obj = new pm_config_obj(p_testRunId);
-                $('#layout_center_content').empty();
-                test1_config_obj.create_config_page();
-                $("#tabs").tabs();
-                $("#p_select_model").wijdropdown();
-
-                //events listeners:
-                var model_selected=$('#p_select_model').find(":selected").last().text();
-
-                $('#p_select_model').change(function() {
-                    model_selected='';
-                    model_selected = $('#p_select_model').find(":selected").last().text();
-                });
-
-                //Config page:
-
-                $('#p_btn_save_basic_config').click(function(){
-                    //save ip, dev model and build id to local storage.
-
-                    //IP
-                    var this_ip =  $('#p_input_ip').val()
-                    var CheckIP =/^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/;
-                    if (CheckIP.test(this_ip)){ // if validated
-                        localStorage.setItem(p_testRunId+'_faz_ip',this_ip);
-                        $('#p_input_ip').next('span').empty();
-                        faz_ip=localStorage.getItem(p_testRunId+'_faz_ip');
-                        $('#p_input_ip').after('<span>'+faz_ip+'</span>');
-                    }
-                    else{
-                        $('#p_input_ip').next('span').empty();
-                        $('#p_input_ip').after('<span style="color:red" >'+'Please input a valid IPv4 address'+'</span>');
-                    }
-
-                    //username and password:
-                    var this_username = $('#p_input_u').val()
 
 
-                    if (this_username != '')
-                         localStorage.setItem(p_testRunId+'_faz_username',this_username);
-                    else
-                        alert('User name can not be empty!');
-
-                    var this_password = $('#p_input_p').val()
-                    localStorage.setItem(p_testRunId+'_faz_password',this_password);
-
-                    //interval
-                    var interval_ch = $('#p_input_t').val();
-
-                    if (interval_ch!='')
-                    {
-
-                        var this_interval = parseInt(interval_ch)*1000;
-                        if (this_interval!=0)
-                        {
-
-                            localStorage.setItem(p_testRunId+'_faz_interval',this_interval);
-                        }
-                        else
-                            alert ("time interval can not be zero!");
-                    }
-                    else
-                       alert('Time interval can not be empty!');
-
-
-                    // model
-                    //check model, must be one of: VM64,VM32,100C,1000B,1000C,4000A,4000B,2000B,400C,200D,2000A,400B.
-                    //var model_list = ['VM64','VM32','100C','1000B','1000C','4000A','4000B','2000B','400C','200D','2000A','400B'];
-
-                    localStorage.setItem(p_testRunId+'_faz_model', model_selected);
-
-
-                    $('#p_span_model').html('');
-                    faz_model=localStorage.getItem(p_testRunId+'_faz_model');
-                    $('#p_span_model').html(faz_model);
-
-
-
-                    //build
-                    var CheckBuild = /^[0-9]{4}$/;
-                    var this_build = $('#p_input_b').val();
-                    if (CheckBuild.test(this_build)){
-                        localStorage.setItem(testRunId+'_faz_build', this_build);
-                        $('#p_input_b').next('span').empty();
-                        faz_build=localStorage.getItem(p_testRunId+'_faz_build');
-                        $('#p_input_b').after('<span>'+faz_build+'</span>');
-                    }
-                    else{
-                        $('#p_input_b').next('span').empty();
-                        $('#p_input_b').after('<span style="color:red" >'+'Valid build number is 4 digit, like "0165"'+'</span>');
-                    }
-
-
-                });//end of save button.
-
-                $('#p_click_sys').click(function(){
-                    var timeInterval = localStorage.getItem(p_testRunId+'_faz_interval');
-                    $(this).attr('disabled','disabled');
-                    $(this).prev().removeAttr('disabled');
-                    test1_config_obj.runSysChart(parseInt(timeInterval));
-
-                });
-                $('#p_click_sys_stop').click(function(){
-
-                    $(this).attr('disabled','disabled');
-                    $(this).next().removeAttr('disabled');
-                    test1_config_obj.clearSysChart();
-
-                });
-//
-                $('#p_click_top').click(function(){
-                    var timeInterval = localStorage.getItem(p_testRunId+'_faz_interval');
-                    $(this).attr('disabled','disabled');
-                    $(this).prev().removeAttr('disabled');
-                    test1_config_obj.runTopChart(parseInt(timeInterval));
-
-                });
-                $('#p_click_top_stop').click(function(){
-
-                    $(this).attr('disabled','disabled');
-                    $(this).next().removeAttr('disabled');
-                    test1_config_obj.clearTopChart();
-
-                });
-
-                $('#p_click_fortilogd').click(function(){
-                    var timeInterval = localStorage.getItem(p_testRunId+'_faz_interval');
-                    $(this).attr('disabled','disabled');
-                    $(this).prev().removeAttr('disabled');
-                    test1_config_obj.runFldChart(parseInt(timeInterval));
-
-                });
-                $('#p_click_fortilogd_stop').click(function(){
-
-                    $(this).attr('disabled','disabled');
-                    $(this).next().removeAttr('disabled');
-                    test1_config_obj.clearFldChart();
-
-                });
-
-                $('#p_click_sqlplugind').click(function(){
-                    var timeInterval = localStorage.getItem(p_testRunId+'_faz_interval');
-                    $(this).attr('disabled','disabled');
-                    $(this).prev().removeAttr('disabled');
-                    test1_config_obj.runSpdChart(parseInt(timeInterval));
-
-                });
-                $('#p_click_sqlplugind_stop').click(function(){
-
-                    $(this).attr('disabled','disabled');
-                    $(this).next().removeAttr('disabled');
-                    test1_config_obj.clearSpdChart();
-
-                });
-
-
-                $('#btn_compare').click(function(){
-                    $("#show_compare_result").empty();
-                    // compare the 2 local storage chart data:
-                    //get chart list (this is the chart list after upgrade):
-                    var faz_ip=localStorage.getItem(testRunId+'_faz_ip');
-                    var adom = localStorage.getItem(testRunId+'_faz_adom');
-                    $.getJSON('chart_list?ip='+faz_ip+'&adom='+faz_adom, function (data) {
-                        data.sort().forEach(function(entry){
-                            //get before upgrade chart data:
-                            var before_upgrade_data = localStorage.getItem(testRunId+'_'+entry+'_before_upgrade');
-                            var after_upgrade_data = localStorage.getItem(testRunId+'_'+entry+'_after_upgrade');
-
-                            console.log('before_upgrade_data: ', JSON.parse(before_upgrade_data));
-                            console.log('after_upgrade_data: ', JSON.parse(after_upgrade_data));
-                            if (before_upgrade_data)
-                            {
-                                if (before_upgrade_data ==after_upgrade_data)
-                                {
-                                    $("#show_compare_result").append("<p>"+entry+" Match</p>")
-                                }
-                                else if (before_upgrade_data !=after_upgrade_data)
-                                {
-                                    $("#show_compare_result").append("<p>"+entry+" <span style='color: red'>Not Match</span></p>")
-                                }
-                            }
-                            else
-                                $("#show_compare_result").append("<p>"+entry+" <span style='color: deeppink'>No value</span></p>")
-                        });
-                    });
-                });
-
-                $('#btn_chart_list_1').click(function(){
-                    faz_ip = localStorage.getItem(testRunId+'_faz_ip');
-                    faz_adom = localStorage.getItem(testRunId+'_faz_adom');
-                    devid = localStorage.getItem(testRunId+'_devid');
-
-                    //empty chart list
-                    $("#show_chart_left").empty();
-                    //get chart list:
-
-                    test1_config_obj.getChartList(faz_ip,faz_adom,testRunId,0,devid);
-                });
-
-
-                //upload image:
-                $('#btn_load_image').click(function(){
-                    faz_ip=localStorage.getItem(testRunId+'_faz_ip');
-                    faz_build=localStorage.getItem(testRunId+'_faz_build');
-                    faz_model=localStorage.getItem(testRunId+'_faz_model');
-                    console.log('faz_model='+faz_model);
-                    $.get('load_image?ip='+faz_ip+'&build='+faz_build+'&model='+faz_model,function(data){
-                        console.log(data);
-                        if (data.indexOf("FTP failed")!==-1)
-                        {
-                            alert("Image file does not exist, Please check the build is exist in trunk build server 172.16.100.71 and try again. The build number must be 4 digits, like: 0160");
-                        }
-                    }).error(function(e){
-                                if (e.responseText.indexOf("local variable 'tn'")!== -1)
-                                {
-                                    alert("Device can not reach or Telnet is not enabled, Please check and try again.");
-                                }
-
-                                console.log(e.responseText);
-                            })
-                    ;
-
-                });
-
-                //test chart list after upgrade:
-                $('#btn_chart_list_2').click(function(){
-                    faz_ip = localStorage.getItem(testRunId+'_faz_ip');
-                    faz_adom = localStorage.getItem(testRunId+'_faz_adom');
-                    devid = localStorage.getItem(testRunId+'_devid');
-
-                    //empty chart list
-                    $("#show_chart_right").empty();
-                    //get chart list:
-                    test1_config_obj.getChartList(faz_ip,faz_adom,testRunId,1,devid);
-                });
-
-
-            });
         });
     </script>
 
@@ -905,14 +620,12 @@
     <h3>FortiAnalyzer Report Test</h3>
 </div>
 
-<div class="ui-layout-south ui-widget-content ui-state-error" style="display: none;">
-    <div id="loading" style="display: inline-block" height='30px'>
-        <img src="http://i.stack.imgur.com/FhHRx.gif" width="20px" height="20px"/> <span>Loading</span>
-    </div>
-   <span style="display: 'inline-block' ; position:'relative';float: right"> Fortinet QA  @2013</span>
-</div>
+<div class="ui-layout-south ui-widget-content ui-state-error" style="display: none;"> Fortinet QA  @2013</div>
 
 <div class="ui-layout-center" style="display: none;">
+    <div id="loading">
+        <p><img src="http://i.stack.imgur.com/FhHRx.gif" /> Please Wait</p>
+    </div>
 
     <!--<h3 class="ui-widget-header">Report data upload test</h3>-->
     <!--<div class="modal">dasf&lt;!&ndash; Place at bottom of page &ndash;&gt;</div>-->
@@ -939,14 +652,14 @@
             <div class="main demo">
                 <!-- Begin demo markup -->
                 <div>
-                    <ul class="tree">
+                    <ul id="tree">
                         <li><a><span>Test iterations</span></a>
                             <ul>
-                                <li><a id='testrun1' class="testrun"><span>FortiAnalyzer 1</span></a></li>
-                                <li><a id='testrun2' class="testrun"><span>FortiAnalyzer 2</span></a></li>
-                                <li><a id='testrun3' class="testrun"><span>FortiAnalyzer 3</span></a></li>
-                                <li><a id='testrun4' class="testrun"><span>FortiAnalyzer 4</span></a></li>
-                                <li><a id='testrun5' class="testrun"><span>FortiAnalyzer 5</span></a></li>
+                                <li><a id='testrun1' class="testrun"><span>Test Run 1</span></a></li>
+                                <li><a id='testrun2' class="testrun"><span>Test Run 2</span></a></li>
+                                <li><a id='testrun3' class="testrun"><span>Test Run 3</span></a></li>
+                                <li><a id='testrun4' class="testrun"><span>Test Run 4</span></a></li>
+                                <li><a id='testrun5' class="testrun"><span>Test Run 5</span></a></li>
                             </ul>
                         </li>
                     </ul>
@@ -974,32 +687,16 @@
             <!--</div>-->
         </div>
 
-        <h3><a href="#">Performance Monitor</a></h3>
-        <div class="container">
+        <h3><a href="#">Section 2</a></h3>
 
-            <div class="main demo">
-                <!-- Begin demo markup -->
-                <div>
-                    <ul class="tree">
-                        <li><a><span>Test iterations</span></a>
-                            <ul>
-                                <li><a id='p_testrun1' class="p_testrun"><span>FortiAnalyzer 1</span></a></li>
-                                <li><a id='p_testrun2' class="p_testrun"><span>FortiAnalyzer 2</span></a></li>
-                                <li><a id='p_testrun3' class="p_testrun"><span>FortiAnalyzer 3</span></a></li>
-                                <li><a id='p_testrun4' class="p_testrun"><span>FortiAnalyzer 4</span></a></li>
-                                <li><a id='p_testrun5' class="p_testrun"><span>FortiAnalyzer 5</span></a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <!-- End demo markup -->
+        <div>
+            <h5>Sed Non Urna</h5>
 
-            </div>
-            <!--<div class="footer demo-description">-->
-            <!--<p>-->
-            <!--This sample shows how to dynamically add and remove nodes from the wijtree widget.-->
-            <!--</p>-->
-            <!--</div>-->
+            <p>Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus.
+                Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit,
+                faucibus interdum tellus libero ac justo.</p>
+
+            <p>Vivamus non quam. In suscipit faucibus urna.</p>
         </div>
 
         <h3><a href="#">Section 3</a></h3>
