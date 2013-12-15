@@ -2,12 +2,15 @@ from django.conf.urls import patterns, include, url
 from mysite import views
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic import RedirectView
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
     #url(r'^$', 'mysite.views.home', name='home'),
-    url(r'^$', views.index, name='mysite/index'),
+    url(r'^$', RedirectView.as_view(url='rtm')),
 
     # url(r'^mysite/', include('mysite.foo.urls')),
 
