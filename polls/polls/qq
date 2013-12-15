@@ -1,0 +1,88 @@
+FAZVM64 # Request:
+
+{ "params": [ { "url": "dvmdb\/adom\/root\/log_group", "option": "object member" } ], "jsonrpc": "1.0", "method"                                                                                                                             : "get", "id": "67b38126-8ff1-11e2-9ce4-000c299f766f", "src": "127.0.0.1" }
+
+Response:
+{ "id": "67b38126-8ff1-11e2-9ce4-000c299f766f", "result": [ { "url": "dvmdb\/adom\/root\/log_group" } ] }
+
+
+Request:
+{ "params": [ { "url": "dvmdb\/adom\/root\/log_group", "option": "object member" } ], "jsonrpc": "1.0", "method"                                                                                                                             : "get", "id": "67c62fa6-8ff1-11e2-9963-000c299f766f", "src": "127.0.0.1" }
+
+
+Request:
+{ "params": [ { "url": "dvmdb\/adom\/root\/log_group", "data": [ { "name": "aaa", "old_devices": "", "disk_quota                                                                                                                             ": "1000", "disk_full_act": "0", "type": "1", "os_type": "0", "desc": "aaa" } ] } ], "jsonrpc": "1.0", "method":                                                                                                                              "set", "id": "67c65435-8ff1-11e2-aed0-000c299f766f", "src": "127.0.0.1" }
+
+
+
+
+//test:
+{"method" : "add","params" : [{"url" : "dvmdb/adom/root/log_group/","data" : [{"name": "logarray_name0","old_devices":"":"disk_quota":"1000":"disk_full_act":"0":"type":"1":"os_type":"0":"desc":"test"}]}],"id" : "","session" : "FbA8PNgHncDUfU7lCKJR3d1SZ6ohIFF8ALND4oTRnV6S/0qRHs681tK6WM9JjQtFz//8sZ44hk+O2sGROLIJmA=="}
+
+
+
+
+
+
+
+
+
+
+Response:
+{ "id": "67c62fa6-8ff1-11e2-9963-000c299f766f", "result": [ { "url": "dvmdb\/adom\/root\/log_group" } ] }
+Response:
+{ "id": "67c65435-8ff1-11e2-aed0-000c299f766f", "result": [ { "status": { "code": 0, "message": "OK" }, "url": "                                                                                                                             dvmdb\/adom\/root\/log_group" } ] }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Request:
+{ "id": 847, "method": "get", "params": [ { "current_adom": 3, "filter": [ 3 ], "mkey_is_oid": 1, "url": "log_gr                                                                                                                             oup\/155\/object master" } ], "root": "dvmdb" }
+
+Request:
+{ "params": [ { "url": "dvmdb\/adom\/root\/log_group\/aaa\/object member", "data": [ { "name": "FG200B0000000001                                                                                                                             ", "vdom": "root" } ] } ], "jsonrpc": "1.0", "method": "set", "id": "67eddfa3-8ff1-11e2-b6a5-000c299f766f", "src                                                                                                                             ": "127.0.0.1" }
+Response:
+{ "id": 847, "result": [ { "data": [ { "desc": "", "flags": 8, "logview_customize": "", "mig_mr": 0, "mig_os_ver                                                                                                                             ": 0, "mode": 1, "mr": 0, "name": "root", "obj_customize": "", "oid": 3, "os_ver": 2, "state": 1, "tab_status":                                                                                                                              "" } ], "url": "log_group\/155\/object master" } ] }
+
+
+Request:
+{ "id": 848, "method": "get", "params": [ { "current_adom": 3, "mkey_is_oid": 1, "option": "object member", "url                                                                                                                             ": "log_group\/155" } ], "root": "dvmdb" }
+Response:
+{ "id": 848, "result": [ { "data": { "desc": "aaa", "disk_full_act": 0, "disk_quota": 1000, "disk_used": 0, "nam                                                                                                                             e": "aaa", "oid": 155, "os_type": 0, "rtm_prof_id": 0, "type": 1 }, "url": "log_group\/155" } ] }
+Response:
+{ "id": "67eddfa3-8ff1-11e2-b6a5-000c299f766f", "result": [ { "status": { "code": 0, "message": "OK" }, "url": "                                                                                                                             dvmdb\/adom\/root\/log_group\/aaa\/object member" } ] }
+Request:
+{ "id": 849, "method": "get", "params": [ { "current_adom": 3, "filter": [ 3 ], "mkey_is_oid": 1, "url": "log_gr                                                                                                                             oup\/155\/object master" } ], "root": "dvmdb" }
+Response:
+{ "id": 849, "result": [ { "data": [ { "desc": "", "flags": 8, "logview_customize": "", "mig_mr": 0, "mig_os_ver                                                                                                                             ": 0, "mode": 1, "mr": 0, "name": "root", "obj_customize": "", "oid": 3, "os_ver": 2, "state": 1, "tab_status":                                                                                                                              "" } ], "url": "log_group\/155\/object master" } ] }
+Request:
+{ "id": 850, "method": "get", "params": [ { "current_adom": 3, "mkey_is_oid": 1, "option": "object member", "url                                                                                                                             ": "log_group\/155" } ], "root": "dvmdb" }
+Response:
+{ "id": 850, "result": [ { "data": { "desc": "aaa", "disk_full_act": 0, "disk_quota": 1000, "disk_used": 0, "nam                                                                                                                             e": "aaa", "object member": [ { "name": "FG200B0000000001", "oid": 137, "vdom": "root", "vdom_oid": 3 } ], "oid"                                                                                                                             : 155, "os_type": 0, "rtm_prof_id": 0, "type": 1 }, "url": "log_group\/155" } ] }
+Request:
+{ "params": [ { "url": "dvmdb\/adom\/root\/log_group", "option": "object member" } ], "jsonrpc": "1.0", "method"                                                                                                                             : "get", "id": "6840fd11-8ff1-11e2-a372-000c299f766f", "src": "127.0.0.1" }
+Response:
+{ "id": "6840fd11-8ff1-11e2-a372-000c299f766f", "result": [ { "data": [ { "desc": "aaa", "disk_full_act": 0, "di                                                                                                                             sk_quota": 1000, "disk_used": 0, "name": "aaa", "object member": [ { "name": "FG200B0000000001", "oid": 137, "vd                                                                                                                             om": "root", "vdom_oid": 3 } ], "oid": 155, "os_type": 0, "rtm_prof_id": 0, "type": 1 } ], "url": "dvmdb\/adom\/                                                                                                                             root\/log_group" } ] }
+
+FAZVM64 # dia debug service dvmdb 0
+
+

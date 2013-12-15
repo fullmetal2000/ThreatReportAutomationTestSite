@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+
+ function QA(name){
+    this.name=name;
+     this.id=1;
+ }
+
+QA.prototype.task=function(){
+    console.log('do test');
+}
+
+var tom = new QA('Tom');
+    tom.task();
+
+
+ //step1: define new obj  constructor, call parent constructor.
+function newQA(name){
+
+    QA.call(this);
+}
+
+//step2: assign instance of parent obj to it's prototype
+
+ newQA.prototype = new QA();
+
+ //step3: reassign construction to self.
+
+ newQA.prototype.constructor=newQA;
+
+
+
+ console.log(newQA);
+ newQA.prototype.task=function(){
+     console.log("Do faz test");
+ }
+ console.log(newQA);
+var jerry = new newQA('jerry');
+
+    console.log(jerry.id);
+    jerry.task();
+
+
+
+</script>
+</body>
+</html>

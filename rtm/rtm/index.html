@@ -1,0 +1,449 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="language" content="en"/>
+
+<title>FortiAnalyzer Report Test</title>
+
+<link rel="stylesheet" type="text/css" href="css_url/lib/css/jquery.ui.all.css"/>
+<link rel="stylesheet" type="text/css" href="css_url/lib/css/layout-default-latest.css"/>
+
+<script type="text/javascript" src="css_url/lib/js/jquery-latest.js"></script>
+<script type="text/javascript" src="css_url/lib/js/jquery-ui-latest.js"></script>
+
+<script type="text/javascript" src="css_url/lib/js/jquery.layout-latest.js"></script>
+<script type="text/javascript" src="css_url/lib/js/jquery.layout.resizePaneAccordions-latest.js"></script>
+<!-- compressed: /lib/js/jquery.layout.resizePaneAccordions-latest.min.js -->
+
+<script type="text/javascript" src="css_url/lib/js/themeswitchertool.js"></script>
+<script type="text/javascript" src="css_url/lib/js/debug.js"></script>
+<script type="text/javascript" src="css_url/lib/js/spin.js"></script>
+<script type="text/javascript" src="css_url/lib/js/jquery.blockUI.js"></script>
+<!--self use:-->
+<script type="text/javascript" src="css_url/lib/js/upload.config.js"></script>
+<script type="text/javascript" src="css_url/lib/js/upload.starttest.js"></script>
+
+<!--Theme-->
+<link href="http://cdn.wijmo.com/themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css"/>
+
+<!--Wijmo Widgets CSS-->
+<link href="http://cdn.wijmo.com/jquery.wijmo-pro.all.3.20131.1.min.css" rel="stylesheet" type="text/css"/>
+
+<!--Wijmo Widgets JavaScript-->
+<script src="http://cdn.wijmo.com/jquery.wijmo-open.all.3.20131.1.min.js" type="text/javascript"></script>
+<script src="http://cdn.wijmo.com/jquery.wijmo-pro.all.3.20131.1.min.js" type="text/javascript"></script>
+
+<style type="text/css">
+
+        /* remove padding and scrolling from elements that contain an Accordion OR a content-div */
+    .ui-layout-center, /* has content-div */
+    .ui-layout-west, /* has Accordion */
+    .ui-layout-east, /* has content-div ... */
+    .ui-layout-east .ui-layout-content {
+        /* content-div has Accordion */
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .ui-layout-center P.ui-layout-content {
+        line-height: 1.4em;
+        margin: 0; /* remove top/bottom margins from <P> used as content-div */
+    }
+
+    h3, h4 {
+        /* Headers & Footer in Center & East panes */
+        font-size: 1.1em;
+        background: #EEF;
+        border: 1px solid #BBB;
+        border-width: 0 0 1px;
+        padding: 7px 10px;
+        margin: 0;
+    }
+
+    .ui-layout-east h4 {
+        /* Footer in East-pane */
+        font-size: 0.9em;
+        font-weight: normal;
+        border-width: 1px 0 0;
+    }
+
+</style>
+
+<style type="text/css">
+    body {
+        font-family: arial, sans-serif;
+    }
+    .left{
+        position: relative;
+    }
+    .mid{
+        position: relative;
+        top: -685px;
+        left: 480px;
+    }
+    .right{
+        position: relative;
+        top: -345px;
+        left: 960px;
+    }
+    .chart_div{
+        border-style: solid;
+        border-width: 1px;
+        padding: 5px;
+
+    }
+
+    .modal {
+        display:    none;
+        position:   fixed;
+        z-index:    1000;
+        top:        0;
+        left:       0;
+        height:     100%;
+        width:      100%;
+        background: rgba( 255, 255, 255, .8 )
+        url('http://i.stack.imgur.com/FhHRx.gif')
+        50% 50%
+        no-repeat;
+    }
+
+        /* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+    body.loading {
+        overflow: hidden;
+    }
+
+        /* Anytime the body has the loading class, our
+   modal element will be visible */
+    body.loading .modal {
+        display: block;
+    }
+        /*style to split line*/
+    hr.grayhr {
+        border: none;
+        height: 1px;
+        background-color: #aaa;
+    }
+    .ui-tabs {
+        font-size:smaller;
+        border: none;
+        margin: 0px;
+
+    }
+    .ui-layout-content{
+        padding: 0px;
+    }
+    .wijmo-wijtree{
+        border: none;
+    }
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        myLayout = $('body').layout({
+            west__size: 300, east__size: 300
+            // RESIZE Accordion widget when panes resize
+            , west__onresize: $.layout.callbacks.resizePaneAccordions//, east__onresize: $.layout.callbacks.resizePaneAccordions
+        });
+
+        // ACCORDION - in the West pane
+        $("#accordion1").accordion({
+            heightStyle: "fill"
+        });
+
+        // ACCORDION - in the East pane - in a 'content-div'
+//            $("#accordion2").accordion({
+//                heightStyle: "fill", active: 1
+//            });
+
+        // THEME SWITCHER
+        addThemeSwitcher('.ui-layout-north', { top: '12px', right: '5px' });
+        // if a new theme is applied, it could change the height of some content,
+        // so call resizeAll to 'correct' any header/footer heights affected
+        // NOTE: this is only necessary because we are changing CSS *AFTER LOADING* using themeSwitcher
+        setTimeout(myLayout.resizeAll, 1000);
+        /* allow time for browser to re-render with new theme */
+        //self:
+        $(document).ajaxStart(function() {
+
+            $.blockUI({ css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: .5,
+                color: '#fff'
+            } });
+        });
+
+        $(document).ajaxStop(function() {
+            $.unblockUI();
+        });
+        //hide the buttons
+        // west panel tree
+        $('#start_buttons').hide();
+        var tv = $("#tree").wijtree(
+                { autoCollapse: true}
+        );
+        function getNode() {
+            return $("#tree").wijtree("findNodeByText", "Test iterations");
+        }
+        //Add child node for node "Folder 1".
+        $('#addNode').click(function () {
+            var node = getNode();
+            if (node != null)
+                node.element.wijtreenode("add", 'New Test', parseInt($("#addIndex").val()));
+        });
+        //Remove child node for node "Folder 1".
+        $('#removeNode').click(function () {
+            var node = getNode();
+            if (node != null)
+                node.element.wijtreenode("remove", parseInt($("#removeIndex").val()));
+        });
+
+        $('#btn_add_more').click(function(){
+            $('#add_chart_container').append("<div id='add_chart_sub_container'> <button class = 'cls_add_chart' >choose</button> <input id='input_chart_name'/><button class = 'cls_delete_chart' >delete</button>  <br/> </div>");
+        });
+
+        //click test run to change center panel to config page:
+        $('.testrun').click(function(){
+            var testRunId = $(this).attr('id');
+            //variables:
+            var faz_ip='',
+                    faz_model='',
+                    faz_build='';
+
+            //DOM initializations:
+            //show up first buttons
+            //$('#start_buttons').show();
+
+            //create a upload test config object:
+            var test1_config_obj = new upload_config_obj(testRunId);
+            $('#layout_center_content').empty();
+            test1_config_obj.create_config_page();
+            $("#tabs").tabs();
+            //events listeners:
+            //Config page:
+            //Add more chart   action:
+            $('#btn_add_more').click(function(){
+                $('#add_chart_container').append("<div id='add_chart_sub_container'> <button class = 'cls_add_chart' >choose</button> <input id='input_chart_name'/><button class = 'cls_delete_chart' >delete</button>  <br/> </div>");
+
+                $('.cls_delete_chart').click(function(){
+                    $(this).parent().remove();
+                });
+            });
+            //Delete chart   action:
+            $('.cls_delete_chart').click(function(){
+                $(this).parent().remove();
+            });
+
+            // Choose Chart action:
+            $('.cls_add_chart').click(function(){
+                alert('aaaa');
+            });
+
+            $('#btn_save_basic_config').click(function(){
+                //save ip, dev model and build id to local storage.
+                localStorage.setItem(testRunId+'_faz_ip', $('#f_input_ip').val());
+                $('#f_input_ip').next('span').empty();
+                faz_ip=localStorage.getItem(testRunId+'_faz_ip');
+                $('#f_input_ip').after('<span>'+faz_ip+'</span>');
+
+                localStorage.setItem(testRunId+'_faz_model', $('#f_input_m').val());
+                $('#f_input_m').next('span').empty();
+                faz_model=localStorage.getItem(testRunId+'_faz_model');
+                $('#f_input_m').after('<span>'+faz_model+'</span>');
+
+                localStorage.setItem(testRunId+'_faz_build', $('#f_input_b').val());
+                $('#f_input_b').next('span').empty();
+                faz_build=localStorage.getItem(testRunId+'_faz_build');
+                $('#f_input_b').after('<span>'+faz_build+'</span>');
+
+            });
+
+            $('#btn_compare').click(function(){
+                $("#show_compare_result").empty();
+                // compare the 2 local storage chart data:
+                //get chart list (this is the chart list after upgrade):
+                faz_ip=localStorage.getItem(testRunId+'_faz_ip');
+                $.getJSON('chart_list?ip='+faz_ip, function (data) {
+                    data.sort().forEach(function(entry){
+                        //get before upgrade chart data:
+                        var before_upgrade_data = localStorage.getItem(testRunId+'_'+entry+'_before_upgrade');
+                        var after_upgrade_data = localStorage.getItem(testRunId+'_'+entry+'_after_upgrade');
+
+                        console.log('before_upgrade_data: ', JSON.parse(before_upgrade_data));
+                        console.log('after_upgrade_data: ', JSON.parse(after_upgrade_data));
+                        if (before_upgrade_data)
+                        {
+                            if (before_upgrade_data ==after_upgrade_data)
+                            {
+                                $("#show_compare_result").append("<p>"+entry+" Match</p>")
+                            }
+                            else if (before_upgrade_data !=after_upgrade_data)
+                            {
+                                $("#show_compare_result").append("<p>"+entry+" <span style='color: red'>Not Match</span></p>")
+                            }
+                        }
+                        else
+                            $("#show_compare_result").append("<p>"+entry+" <span style='color: deeppink'>No value</span></p>")
+                    });
+                });
+            });
+
+            $('#btn_chart_list_1').click(function(){
+                faz_ip=localStorage.getItem(testRunId+'_faz_ip');
+                //empty chart list
+                $("#show_chart_left").empty();
+                //get chart list:
+                console.log('testrunid'+testRunId);
+                console.log('ip'+faz_ip);
+                test1_config_obj.getChartList(faz_ip,testRunId,0);
+            });
+
+            //test chart list after upgrade:
+            $('#btn_chart_list_2').click(function(){
+                faz_ip=localStorage.getItem(testRunId+'_faz_ip');
+                //empty chart list
+                $("#show_chart_right").empty();
+                //get chart list:
+                test1_config_obj.getChartList(faz_ip,testRunId,1);
+            });
+        });
+    });
+</script>
+
+</head>
+<body>
+
+<div class="ui-layout-north ui-widget-content" style="display: none;">
+    <div style="float: right; margin-right: 160px;">
+        <button onClick="resizeWidgets()">Resize</button>
+        &nbsp;
+        <button onClick="removeUITheme(); myLayout.resizeAll()">Remove Theme</button>
+    </div>
+    <h3>FortiAnalyzer Report Test</h3>
+</div>
+
+<div class="ui-layout-south ui-widget-content ui-state-error" style="display: none;"> Fortinet QA  @2013</div>
+
+<div class="ui-layout-center" style="display: none;">
+    <!--<div id="loading">-->
+    <!--<p><img src="http://i.stack.imgur.com/FhHRx.gif" /> Please Wait</p>-->
+    <!--</div>-->
+
+    <!--<h3 class="ui-widget-header">Report data upload test</h3>-->
+    <div class="modal">dasf<!-- Place at bottom of page --></div>
+    <div id="start_buttons">
+        <button id='btn_start'>start_test</button><button id='btn_config'>configuration</button>
+    </div>
+
+    <div class="ui-layout-content ui-widget-content" id="layout_center_content">
+
+        <div>
+            <h3>Please select a test run in the left panel firstly</h3>
+        </div>
+
+    </div>
+</div>
+
+<div class="ui-layout-west" style="display: none;">
+    <div id="accordion1" class="basic">
+
+        <h3><a href="#">Upload test</a></h3>
+
+        <div class="container">
+
+            <div class="main demo">
+                <!-- Begin demo markup -->
+                <div>
+                    <ul id="tree">
+                        <li><a><span>Test iterations</span></a>
+                            <ul>
+                                <li><a id='testrun1' class="testrun"><span>Test Run 1</span></a></li>
+                                <li><a id='testrun2' class="testrun"><span>Test Run 2</span></a></li>
+                                <li><a id='testrun3' class="testrun"><span>Test Run 3</span></a></li>
+                                <li><a id='testrun4' class="testrun"><span>Test Run 4</span></a></li>
+                                <li><a id='testrun5' class="testrun"><span>Test Run 5</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- End demo markup -->
+                <div class="demo-options">
+                    <!-- Begin options markup -->
+                    <div>
+                        <input id="addNode" type="button"  value="Add" />
+                        at index:
+                        <input id="addIndex" type="text" size="3" value="0" />
+                    </div>
+                    <div>
+                        <input id="removeNode" type="button" value="Remove" />
+                        at index:
+                        <input id="removeIndex" type="text" size="3" value="0" />
+                    </div>
+                    <!-- End options markup -->
+                </div>
+            </div>
+            <!--<div class="footer demo-description">-->
+            <!--<p>-->
+            <!--This sample shows how to dynamically add and remove nodes from the wijtree widget.-->
+            <!--</p>-->
+            <!--</div>-->
+        </div>
+
+        <h3><a href="#">Section 2</a></h3>
+
+        <div>
+            <h5>Sed Non Urna</h5>
+
+            <p>Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus.
+                Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit,
+                faucibus interdum tellus libero ac justo.</p>
+
+            <p>Vivamus non quam. In suscipit faucibus urna.</p>
+        </div>
+
+        <h3><a href="#">Section 3</a></h3>
+
+        <div>
+            <p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
+                Phasellus pellentesque purus in massa. Aenean in pede.</p>
+
+            <p>Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo,
+                magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.</p>
+            <ul>
+                <li>List item one</li>
+                <li>List item two</li>
+                <li>List item three</li>
+            </ul>
+        </div>
+
+        <h3><a href="#">Section 4</a></h3>
+
+        <div>
+            <p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames
+                ac turpis egestas.</p>
+
+            <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                Aenean lacinia mauris vel est.</p>
+
+            <p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+</body>
+</html> 

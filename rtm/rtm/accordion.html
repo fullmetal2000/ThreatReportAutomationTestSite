@@ -1,0 +1,1040 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="language" content="en"/>
+
+    <title>FortiAnalyzer Report Test</title>
+
+    <link rel="stylesheet" type="text/css" href="css_url/lib/css/jquery.ui.all.css"/>
+    <link rel="stylesheet" type="text/css" href="css_url/lib/css/layout-default-latest.css"/>
+
+    <script type="text/javascript" src="css_url/lib/js/jquery-latest.js"></script>
+    <script type="text/javascript" src="css_url/lib/js/jquery-ui-latest.js"></script>
+
+    <script type="text/javascript" src="css_url/lib/js/jquery.layout-latest.js"></script>
+    <script type="text/javascript" src="css_url/lib/js/jquery.layout.resizePaneAccordions-latest.js"></script>
+    <!-- compressed: /lib/js/jquery.layout.resizePaneAccordions-latest.min.js -->
+
+    <script type="text/javascript" src="css_url/lib/js/themeswitchertool.js"></script>
+    <script type="text/javascript" src="css_url/lib/js/debug.js"></script>
+    <script type="text/javascript" src="css_url/lib/js/spin.js"></script>
+    <script type="text/javascript" src="css_url/lib/js/jquery.blockUI.js"></script>
+    <!--self use:-->
+    <script type="text/javascript" src="css_url/lib/js/upload.config.js"></script>
+    <script type="text/javascript" src="css_url/lib/js/pm.config.js"></script>
+    <script type="text/javascript" src="css_url/lib/js/upload.starttest.js"></script>
+
+    <!--Theme-->
+    <link href="http://cdn.wijmo.com/themes/rocket/jquery-wijmo.css" rel="stylesheet" type="text/css"/>
+
+    <!--Wijmo Widgets CSS-->
+    <link href="http://cdn.wijmo.com/jquery.wijmo-pro.all.3.20131.1.min.css" rel="stylesheet" type="text/css"/>
+
+    <!--Wijmo Widgets JavaScript-->
+    <script src="http://cdn.wijmo.com/jquery.wijmo-open.all.3.20131.1.min.js" type="text/javascript"></script>
+    <script src="http://cdn.wijmo.com/jquery.wijmo-pro.all.3.20131.1.min.js" type="text/javascript"></script>
+
+    <style type="text/css">
+
+            /* remove padding and scrolling from elements that contain an Accordion OR a content-div */
+        .ui-layout-center, /* has content-div */
+        .ui-layout-west, /* has Accordion */
+        .ui-layout-east, /* has content-div ... */
+        .ui-layout-east .ui-layout-content {
+            /* content-div has Accordion */
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .ui-layout-center P.ui-layout-content {
+            line-height: 1.4em;
+            margin: 0; /* remove top/bottom margins from <P> used as content-div */
+        }
+
+        h3, h4 {
+            /* Headers & Footer in Center & East panes */
+            font-size: 1.1em;
+            background: #EEF;
+            border: 1px solid #BBB;
+            border-width: 0 0 1px;
+            padding: 7px 10px;
+            margin: 0;
+        }
+
+        .ui-layout-east h4 {
+            /* Footer in East-pane */
+            font-size: 0.9em;
+            font-weight: normal;
+            border-width: 1px 0 0;
+        }
+        #list
+        {
+            height: 200px;
+            width: 300px;
+        }
+
+        #testinput
+        {
+            width: 150px;
+            padding: 5px;
+        }
+    </style>
+
+    <style type="text/css">
+        body {
+            font-family: arial, sans-serif;
+        }
+        .left{
+            position: relative;
+        }
+        .mid{
+            position: relative;
+            top: -685px;
+            left: 480px;
+        }
+        .right{
+            position: relative;
+            top: -345px;
+            left: 960px;
+        }
+        .chart_div{
+            border-style: solid;
+            border-width: 1px;
+            padding: 5px;
+
+        }
+
+        .modal {
+            display:    none;
+            position:   fixed;
+            z-index:    1000;
+            top:        0;
+            left:       0;
+            height:     100%;
+            width:      100%;
+            background: rgba( 255, 255, 255, .8 )
+            url('http://i.stack.imgur.com/FhHRx.gif')
+            50% 50%
+            no-repeat;
+        }
+
+            /* When the body has the loading class, we turn
+       the scrollbar off with overflow:hidden */
+        /*body.loading {*/
+            /*overflow: hidden;*/
+        /*}*/
+
+            /* Anytime the body has the loading class, our*/
+       /*modal element will be visible */
+        /*body.loading .modal {*/
+            /*display: block;*/
+        /*}*/
+            /*style to split line*/
+        hr.grayhr {
+            border: none;
+            height: 1px;
+            background-color: #aaa;
+        }
+        .ui-tabs {
+            font-size:smaller;
+            border: none;
+            margin: 0px;
+
+        }
+        .ui-layout-content{
+            padding: 0px;
+        }
+        .wijmo-wijtree{
+            border: none;
+        }
+
+
+    </style>
+
+
+<style type = "text/css">
+
+    .perf_chart{
+        position:relative;
+        float:left;
+        width: 600px;
+        height:400px;
+        border:1px solid;
+        margin:1em;
+        box-shadow: 10px 10px 5px #888888;
+
+    }
+
+    h3{text-align:center}
+
+    .ch_btn{
+        position:relative;
+        float:right;
+    }
+
+
+</style>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //global variables:
+            var devinfo = {};
+            var devid = '';
+            $('#loading').hide()
+            function converListToLabel( list){
+                var newList = [];
+                $.map(list,function(data){
+                    newList.push({'label':data,'value':data});
+                });
+                return newList;
+            }
+
+            myLayout = $('body').layout({
+                west__size: 300, east__size: 300
+                // RESIZE Accordion widget when panes resize
+                , west__onresize: $.layout.callbacks.resizePaneAccordions//, east__onresize: $.layout.callbacks.resizePaneAccordions
+            });
+
+            // ACCORDION - in the West pane
+            $("#accordion1").accordion({
+                heightStyle: "fill"
+            });
+
+            // ACCORDION - in the East pane - in a 'content-div'
+//            $("#accordion2").accordion({
+//                heightStyle: "fill", active: 1
+//            });
+
+            // THEME SWITCHER
+            addThemeSwitcher('.ui-layout-north', { top: '12px', right: '5px' });
+            // if a new theme is applied, it could change the height of some content,
+            // so call resizeAll to 'correct' any header/footer heights affected
+            // NOTE: this is only necessary because we are changing CSS *AFTER LOADING* using themeSwitcher
+            setTimeout(myLayout.resizeAll, 1000);
+            /* allow time for browser to re-render with new theme */
+            //self:
+            $(document).ajaxStart(function() {
+
+<<<<<<< HEAD
+                $.blockUI({ css: {
+                    border: 'none',
+                    padding: '15px',
+                    backgroundColor: '#000',
+                    '-webkit-border-radius': '10px',
+                    '-moz-border-radius': '10px',
+                    opacity: .5,
+                    color: '#fff'
+                } });
+  //              $('#loading').show();
+            });
+
+            $(document).ajaxStop(function() {
+                $.unblockUI();
+   //             $('#loading').hide();
+=======
+                //below are blocking whole page:
+//                $.blockUI({ css: {
+//                    border: 'none',
+//                    padding: '15px',
+//                    backgroundColor: '#000',
+//                    '-webkit-border-radius': '10px',
+//                    '-moz-border-radius': '10px',
+//                    opacity: .5,
+//                    color: '#fff'
+//                } });
+                //below are only showing the status bar:
+                $('#loading').show();
+            });
+
+            $(document).ajaxStop(function() {
+              //  $.unblockUI();
+                $('#loading').hide();
+>>>>>>> 7cc9a1907e647512e0a18a3be3777b820346b71d
+            });
+           //hide the buttons
+            // west panel tree
+            $('#start_buttons').hide();
+            var tv = $(".tree").wijtree(
+                    {
+                        showExpandCollapse: false,//this is to expand the tree by default
+                        autoCollapse: false
+                       //allowEdit: true
+                    }
+            );
+            function getNode() {
+                return $(".tree").wijtree("findNodeByText", "Test iterations");
+
+            }
+            //Add child node for node "Folder 1".
+            $('#addNode').click(function () {
+                var node = getNode();
+                if (node != null)
+                    node.element.wijtreenode("add", 'New Test', parseInt($("#addIndex").val()));
+            });
+            //Remove child node for node "Folder 1".
+            $('#removeNode').click(function () {
+                var node = getNode();
+                if (node != null)
+                    node.element.wijtreenode("remove", parseInt($("#removeIndex").val()));
+            });
+
+            $('#btn_add_more').click(function(){
+                $('#add_chart_container').append("<div id='add_chart_sub_container'> <button class = 'cls_add_chart' >choose</button> <input id='input_chart_name'/><button class = 'cls_delete_chart' >delete</button>  <br/> </div>");
+            });
+
+            //click test run to change center panel to config page:
+            $('.testrun').click(function(){
+
+             var testRunId = $(this).attr('id');
+                //variables:
+                var faz_ip='',
+                        faz_model='VM64',
+                        faz_adom='root',
+                        faz_build='',
+                        faz_dev='';
+
+                //DOM initializations:
+                //show up first buttons
+                //$('#start_buttons').show();
+
+                //create a upload test config object:
+                var test1_config_obj = new upload_config_obj(testRunId);
+                $('#layout_center_content').empty();
+                test1_config_obj.create_config_page();
+                $("#tabs").tabs();
+                $("#select_model").wijdropdown();
+                //events listeners:
+                var model_selected=$('#select_model').find(":selected").last().text();
+                var adom_selected= $('#select_adom').find(":selected").last().text();
+
+                $('#select_model').change(function() {
+                    model_selected='';
+                    model_selected = $('#select_model').find(":selected").last().text();
+                });
+                $("#select_adom").change(function () {
+                    adom_selected='';
+                    adom_selected = $('#select_adom').find(":selected").last().text();
+                });
+
+
+                $('#btn_add_dev').click(function(){
+                    var dlist =[];
+
+                    //get adom:
+                    //get device list:
+                    $.getJSON('device_list?ip='+localStorage.getItem(testRunId+'_faz_ip')+'&adom='+adom_selected, function (data){
+                        devinfo = data;
+                        console.log('devinfo=',devinfo);
+
+                       var dev = localStorage.getItem(testRunId+'_faz_dev');
+
+                        console.log('dev=',dev);
+                        //devid = devinfo['dev'];
+                        localStorage.setItem(testRunId+'_faz_devid',devid);
+                        console.log('devid=',dev);
+
+                        dlist = $.map(data, function(value,key){
+                            return key;
+                        });
+                        console.log('dlist=',dlist);
+                        //
+                        //show the device list to a widget lIST
+                        var list = $("#list");
+                        var input = $('#f_input_d');
+                        list.wijlist({
+                            selected: function (event, ui) {
+                                var selectedItem = ui.item;
+                                var str = selectedItem.label;
+                                input.val(str);
+                            }
+                        });
+                        //sets items to be rendered
+                        var newList = converListToLabel(dlist);
+                        list.wijlist('setItems', newList);
+                        //use new data to render the wijlist
+                        list.wijlist('renderList');
+                        list.wijlist('refreshSuperPanel');
+                        list.bind("keydown.wijcombobox", function (event) {
+
+                            var keyCode = $.ui.keyCode;
+                            switch (event.keyCode) {
+                                case keyCode.UP:
+                                    // moves focus to the previous item.
+                                    list.wijlist('previous', event);
+                                    // prevent moving cursor to beginning of text field in some browsers
+                                    event.preventDefault();
+                                    break;
+                                case keyCode.DOWN:
+                                    if (!list.is(':visible')) {
+                                        list.show();
+                                        return;
+                                    }
+                                    // moves focus to the next item.
+                                    list.wijlist('next', event);
+                                    // prevent moving cursor to end of text field in some browsers
+                                    event.preventDefault();
+                                    break;
+                                case keyCode.ENTER:
+                                    event.preventDefault();
+                                    // select the current active item
+                                    list.wijlist('select', event);
+                                    break;
+                                case keyCode.PAGE_UP:
+                                    // turns to the previous page of the wijlist.
+                                    list.wijlist('previousPage');
+                                    break;
+                                case keyCode.PAGE_DOWN:
+                                    // turns to the next page of the wijlist.
+                                    list.wijlist('nextPage');
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+                        input.bind("keydown.wijcombobox", function (event) {
+
+                            var keyCode = $.ui.keyCode;
+                            switch (event.keyCode) {
+                                case keyCode.UP:
+                                    // moves focus to the previous item.
+                                    list.wijlist('previous', event);
+                                    // prevent moving cursor to beginning of text field in some browsers
+                                    event.preventDefault();
+                                    break;
+                                case keyCode.DOWN:
+                                    if (!list.is(':visible')) {
+                                        list.show();
+                                        return;
+                                    }
+                                    // moves focus to the next item.
+                                    list.wijlist('next', event);
+                                    // prevent moving cursor to end of text field in some browsers
+                                    event.preventDefault();
+                                    break;
+                                case keyCode.ENTER:
+                                    event.preventDefault();
+                                    // select the current active item
+                                    list.wijlist('select', event);
+                                    break;
+                                case keyCode.PAGE_UP:
+                                    // turns to the previous page of the wijlist.
+                                    list.wijlist('previousPage');
+                                    break;
+                                case keyCode.PAGE_DOWN:
+                                    // turns to the next page of the wijlist.
+                                    list.wijlist('nextPage');
+                                    break;
+                                default:
+                                    break;
+                            }
+                        });
+
+
+//                        $("#dialog-dev").wijdialog({
+//                            autoOpen: true,
+//                            height: 'auto',
+//                            width: 'auto',
+//                            position: [630,250],
+//                            //    modal: true,
+//                            captionButtons: {
+//                                refresh: { visible: false }
+//                            }
+//                        });
+
+
+
+                    });
+                    $('#btn_add_dev').next().empty();
+                    $('#btn_add_dev').after(  "<div id='dialog-dev' title='Basic modal dialog'> \
+                                                                                        <div id=\"list\">     </div> \
+                                      </div>");
+
+
+                });
+
+
+                //Config page:
+                //Add more chart   action:
+                $('#btn_add_more').click(function(){
+                    $('#add_chart_container').append("<div id='add_chart_sub_container'> <button class = 'cls_add_chart' >choose</button> <input id='input_chart_name'/><button class = 'cls_delete_chart' >delete</button>  <br/> </div>");
+
+                    $('.cls_delete_chart').click(function(){
+                        $(this).parent().remove();
+                    });
+                });
+                //Delete chart   action:
+                $('.cls_delete_chart').click(function(){
+                    $(this).parent().remove();
+                });
+
+                // Choose Chart action:
+                $('.cls_add_chart').click(function(){
+                    alert('Sorry, This feature is still developing.');
+                });
+                //below is to show a list for device model
+
+
+                $('#btn_save_basic_config').click(function(){
+                    //save ip, dev model and build id to local storage.
+
+                    //IP
+                    var this_ip =  $('#f_input_ip').val()
+                    var CheckIP =/^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/;
+                    if (CheckIP.test(this_ip)){ // if validated
+                        localStorage.setItem(testRunId+'_faz_ip',this_ip);
+                        $('#f_input_ip').next('span').empty();
+                        faz_ip=localStorage.getItem(testRunId+'_faz_ip');
+                        $('#f_input_ip').after('<span>'+faz_ip+'</span>');
+                    }
+                    else{
+                        $('#f_input_ip').next('span').empty();
+                        $('#f_input_ip').after('<span style="color:red" >'+'Please input a valid IPv4 address'+'</span>');
+                    }
+
+                    // model
+                    //check model, must be one of: VM64,VM32,100C,1000B,1000C,4000A,4000B,2000B,400C,200D,2000A,400B.
+                    //var model_list = ['VM64','VM32','100C','1000B','1000C','4000A','4000B','2000B','400C','200D','2000A','400B'];
+
+                    localStorage.setItem(testRunId+'_faz_model', model_selected);
+
+
+                    $('#span_model').html('');
+                    faz_model=localStorage.getItem(testRunId+'_faz_model');
+                    $('#span_model').html(faz_model);
+
+
+
+                    //build
+                    var CheckBuild = /^[0-9]{4}$/;
+                    var this_build = $('#f_input_b').val();
+                    if (CheckBuild.test(this_build)){
+                        localStorage.setItem(testRunId+'_faz_build', this_build);
+                        $('#f_input_b').next('span').empty();
+                        faz_build=localStorage.getItem(testRunId+'_faz_build');
+                        $('#f_input_b').after('<span>'+faz_build+'</span>');
+                    }
+                    else{
+                        $('#f_input_b').next('span').empty();
+                        $('#f_input_b').after('<span style="color:red" >'+'Valid build number is 4 digit, like "0165"'+'</span>');
+                    }
+
+                    //get the adom list for use
+                    $.getJSON('adom_list?ip='+$('#f_input_ip').val()+'&adom='+'', function (data){
+                        console.log('adom=',data);
+                        $('#select_adom').empty();
+                        $('#select_adom').append('<option>'+'root'+'</option>');
+                        //expand the adom list:
+                        $.each(data,function(idx,value){
+
+                            $('#select_adom').append('<option>'+value+'</option>');
+
+                        })
+
+                    });
+
+                });//end of save button.
+
+                $('#btn_save_adom_config').click(function(){
+                    localStorage.setItem(testRunId+'_faz_adom', adom_selected);
+                    $('#span_adom').html('');
+                    faz_adom=localStorage.getItem(testRunId+'_faz_adom');
+                    console.log('adom='+faz_adom);
+                    $('#span_adom').html(faz_adom);
+
+                    $this = $('#dialog-dev');
+                    $this.hide();
+                    var input_dev = $('#f_input_d').val();
+                    localStorage.setItem(testRunId+"_dev",input_dev);
+
+                    //get dev id of given device id
+                    //devid = devinfo[input_dev]
+                    console.log("devidevid"+devid);
+                    localStorage.setItem(testRunId+"_devid",input_dev);
+                    $('#span_dev').html(localStorage.getItem(testRunId+"_dev")+':'+input_dev);
+                });
+
+                $('#btn_compare').click(function(){
+                    $("#show_compare_result").empty();
+                    // compare the 2 local storage chart data:
+                    //get chart list (this is the chart list after upgrade):
+                    var faz_ip=localStorage.getItem(testRunId+'_faz_ip');
+                    var adom = localStorage.getItem(testRunId+'_faz_adom');
+                    $.getJSON('chart_list?ip='+faz_ip+'&adom='+faz_adom, function (data) {
+                        data.sort().forEach(function(entry){
+                            //get before upgrade chart data:
+                            var before_upgrade_data = localStorage.getItem(testRunId+'_'+entry+'_before_upgrade');
+                            var after_upgrade_data = localStorage.getItem(testRunId+'_'+entry+'_after_upgrade');
+
+                            console.log('before_upgrade_data: ', JSON.parse(before_upgrade_data));
+                            console.log('after_upgrade_data: ', JSON.parse(after_upgrade_data));
+                            if (before_upgrade_data)
+                            {
+                                if (before_upgrade_data ==after_upgrade_data)
+                                {
+                                    $("#show_compare_result").append("<p>"+entry+" Match</p>")
+                                }
+                                else if (before_upgrade_data !=after_upgrade_data)
+                                {
+                                    $("#show_compare_result").append("<p>"+entry+" <span style='color: red'>Not Match</span></p>")
+                                }
+                            }
+                            else
+                                $("#show_compare_result").append("<p>"+entry+" <span style='color: deeppink'>No value</span></p>")
+                        });
+                    });
+                });
+
+                $('#btn_chart_list_1').click(function(){
+                    faz_ip = localStorage.getItem(testRunId+'_faz_ip');
+                    faz_adom = localStorage.getItem(testRunId+'_faz_adom');
+                    devid = localStorage.getItem(testRunId+'_devid');
+
+                    //empty chart list
+                    $("#show_chart_left").empty();
+
+                    //get chart list:
+
+                    test1_config_obj.getChartList(faz_ip,faz_adom,testRunId,0,devid);
+                });
+
+
+                //upload image:
+                $('#btn_load_image').click(function(){
+                    faz_ip=localStorage.getItem(testRunId+'_faz_ip');
+                    faz_build=localStorage.getItem(testRunId+'_faz_build');
+                    faz_model=localStorage.getItem(testRunId+'_faz_model');
+                    console.log('faz_model='+faz_model);
+                    $.get('load_image?ip='+faz_ip+'&build='+faz_build+'&model='+faz_model,function(data){
+                        console.log(data);
+                        if (data.indexOf("FTP failed")!==-1)
+                        {
+                            alert("Image file does not exist, Please check the build is exist in trunk build server 172.16.100.71 and try again. The build number must be 4 digits, like: 0160");
+                        }
+
+
+                    }).error(function(e){
+                                if (e.responseText.indexOf("local variable 'tn'")!== -1)
+                                {
+                                    alert("Device can not reach or Telnet is not enabled, Please check and try again.");
+                                }
+
+                                console.log(e.responseText);
+                            })
+                    ;
+
+               });
+
+                //test chart list after upgrade:
+                $('#btn_chart_list_2').click(function(){
+                    faz_ip = localStorage.getItem(testRunId+'_faz_ip');
+                    faz_adom = localStorage.getItem(testRunId+'_faz_adom');
+                    devid = localStorage.getItem(testRunId+'_devid');
+
+                    //empty chart list
+                    $("#show_chart_right").empty();
+                    //get chart list:
+                    test1_config_obj.getChartList(faz_ip,faz_adom,testRunId,1,devid);
+                });
+
+
+            });
+
+            $('.p_testrun').click(function(){
+
+                var p_testRunId = $(this).attr('id');
+                //variables:
+                var faz_ip='',
+                        faz_model='VM64',
+                        faz_adom='root',
+                        faz_build='',
+                        faz_dev='';
+
+                //create a upload test config object:
+                var test1_config_obj = new pm_config_obj(p_testRunId);
+                $('#layout_center_content').empty();
+                test1_config_obj.create_config_page();
+                $("#tabs").tabs();
+                $("#p_select_model").wijdropdown();
+
+                //events listeners:
+                var model_selected=$('#p_select_model').find(":selected").last().text();
+
+                $('#p_select_model').change(function() {
+                    model_selected='';
+                    model_selected = $('#p_select_model').find(":selected").last().text();
+                });
+
+                //Config page:
+
+                $('#p_btn_save_basic_config').click(function(){
+                    //save ip, dev model and build id to local storage.
+
+                    //IP
+                    var this_ip =  $('#p_input_ip').val()
+                    var CheckIP =/^(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))\.(\d|[1-9]\d|1\d\d|2([0-4]\d|5[0-5]))$/;
+                    if (CheckIP.test(this_ip)){ // if validated
+                        localStorage.setItem(p_testRunId+'_faz_ip',this_ip);
+                        $('#p_input_ip').next('span').empty();
+                        faz_ip=localStorage.getItem(p_testRunId+'_faz_ip');
+                        $('#p_input_ip').after('<span>'+faz_ip+'</span>');
+                    }
+                    else{
+                        $('#p_input_ip').next('span').empty();
+                        $('#p_input_ip').after('<span style="color:red" >'+'Please input a valid IPv4 address'+'</span>');
+                    }
+
+                    //username and password:
+                    var this_username = $('#p_input_u').val()
+
+
+                    if (this_username != '')
+                         localStorage.setItem(p_testRunId+'_faz_username',this_username);
+                    else
+                        alert('User name can not be empty!');
+
+                    var this_password = $('#p_input_p').val()
+                    localStorage.setItem(p_testRunId+'_faz_password',this_password);
+
+                    //interval
+                    var interval_ch = $('#p_input_t').val();
+
+                    if (interval_ch!='')
+                    {
+
+                        var this_interval = parseInt(interval_ch)*1000;
+                        if (this_interval!=0)
+                        {
+
+                            localStorage.setItem(p_testRunId+'_faz_interval',this_interval);
+                        }
+                        else
+                            alert ("time interval can not be zero!");
+                    }
+                    else
+                       alert('Time interval can not be empty!');
+
+
+                    // model
+                    //check model, must be one of: VM64,VM32,100C,1000B,1000C,4000A,4000B,2000B,400C,200D,2000A,400B.
+                    //var model_list = ['VM64','VM32','100C','1000B','1000C','4000A','4000B','2000B','400C','200D','2000A','400B'];
+
+                    localStorage.setItem(p_testRunId+'_faz_model', model_selected);
+
+
+                    $('#p_span_model').html('');
+                    faz_model=localStorage.getItem(p_testRunId+'_faz_model');
+                    $('#p_span_model').html(faz_model);
+
+
+
+                    //build
+                    var CheckBuild = /^[0-9]{4}$/;
+                    var this_build = $('#p_input_b').val();
+                    if (CheckBuild.test(this_build)){
+                        localStorage.setItem(testRunId+'_faz_build', this_build);
+                        $('#p_input_b').next('span').empty();
+                        faz_build=localStorage.getItem(p_testRunId+'_faz_build');
+                        $('#p_input_b').after('<span>'+faz_build+'</span>');
+                    }
+                    else{
+                        $('#p_input_b').next('span').empty();
+                        $('#p_input_b').after('<span style="color:red" >'+'Valid build number is 4 digit, like "0165"'+'</span>');
+                    }
+
+
+                });//end of save button.
+
+                $('#p_click_sys').click(function(){
+                    var timeInterval = localStorage.getItem(p_testRunId+'_faz_interval');
+                    $(this).attr('disabled','disabled');
+                    $(this).prev().removeAttr('disabled');
+                    test1_config_obj.runSysChart(parseInt(timeInterval));
+
+                });
+                $('#p_click_sys_stop').click(function(){
+
+                    $(this).attr('disabled','disabled');
+                    $(this).next().removeAttr('disabled');
+                    test1_config_obj.clearSysChart();
+
+                });
+//
+                $('#p_click_top').click(function(){
+                    var timeInterval = localStorage.getItem(p_testRunId+'_faz_interval');
+                    $(this).attr('disabled','disabled');
+                    $(this).prev().removeAttr('disabled');
+                    test1_config_obj.runTopChart(parseInt(timeInterval));
+
+                });
+                $('#p_click_top_stop').click(function(){
+
+                    $(this).attr('disabled','disabled');
+                    $(this).next().removeAttr('disabled');
+                    test1_config_obj.clearTopChart();
+
+                });
+
+                $('#p_click_fortilogd').click(function(){
+                    var timeInterval = localStorage.getItem(p_testRunId+'_faz_interval');
+                    $(this).attr('disabled','disabled');
+                    $(this).prev().removeAttr('disabled');
+                    test1_config_obj.runFldChart(parseInt(timeInterval));
+
+                });
+                $('#p_click_fortilogd_stop').click(function(){
+
+                    $(this).attr('disabled','disabled');
+                    $(this).next().removeAttr('disabled');
+                    test1_config_obj.clearFldChart();
+
+                });
+
+                $('#p_click_sqlplugind').click(function(){
+                    var timeInterval = localStorage.getItem(p_testRunId+'_faz_interval');
+                    $(this).attr('disabled','disabled');
+                    $(this).prev().removeAttr('disabled');
+                    test1_config_obj.runSpdChart(parseInt(timeInterval));
+
+                });
+                $('#p_click_sqlplugind_stop').click(function(){
+
+                    $(this).attr('disabled','disabled');
+                    $(this).next().removeAttr('disabled');
+                    test1_config_obj.clearSpdChart();
+
+                });
+
+
+                $('#btn_compare').click(function(){
+                    $("#show_compare_result").empty();
+                    // compare the 2 local storage chart data:
+                    //get chart list (this is the chart list after upgrade):
+                    var faz_ip=localStorage.getItem(testRunId+'_faz_ip');
+                    var adom = localStorage.getItem(testRunId+'_faz_adom');
+                    $.getJSON('chart_list?ip='+faz_ip+'&adom='+faz_adom, function (data) {
+                        data.sort().forEach(function(entry){
+                            //get before upgrade chart data:
+                            var before_upgrade_data = localStorage.getItem(testRunId+'_'+entry+'_before_upgrade');
+                            var after_upgrade_data = localStorage.getItem(testRunId+'_'+entry+'_after_upgrade');
+
+                            console.log('before_upgrade_data: ', JSON.parse(before_upgrade_data));
+                            console.log('after_upgrade_data: ', JSON.parse(after_upgrade_data));
+                            if (before_upgrade_data)
+                            {
+                                if (before_upgrade_data ==after_upgrade_data)
+                                {
+                                    $("#show_compare_result").append("<p>"+entry+" Match</p>")
+                                }
+                                else if (before_upgrade_data !=after_upgrade_data)
+                                {
+                                    $("#show_compare_result").append("<p>"+entry+" <span style='color: red'>Not Match</span></p>")
+                                }
+                            }
+                            else
+                                $("#show_compare_result").append("<p>"+entry+" <span style='color: deeppink'>No value</span></p>")
+                        });
+                    });
+                });
+
+                $('#btn_chart_list_1').click(function(){
+                    faz_ip = localStorage.getItem(testRunId+'_faz_ip');
+                    faz_adom = localStorage.getItem(testRunId+'_faz_adom');
+                    devid = localStorage.getItem(testRunId+'_devid');
+
+                    //empty chart list
+                    $("#show_chart_left").empty();
+                    //get chart list:
+
+                    test1_config_obj.getChartList(faz_ip,faz_adom,testRunId,0,devid);
+                });
+
+
+                //upload image:
+                $('#btn_load_image').click(function(){
+                    faz_ip=localStorage.getItem(testRunId+'_faz_ip');
+                    faz_build=localStorage.getItem(testRunId+'_faz_build');
+                    faz_model=localStorage.getItem(testRunId+'_faz_model');
+                    console.log('faz_model='+faz_model);
+                    $.get('load_image?ip='+faz_ip+'&build='+faz_build+'&model='+faz_model,function(data){
+                        console.log(data);
+                        if (data.indexOf("FTP failed")!==-1)
+                        {
+                            alert("Image file does not exist, Please check the build is exist in trunk build server 172.16.100.71 and try again. The build number must be 4 digits, like: 0160");
+                        }
+                    }).error(function(e){
+                                if (e.responseText.indexOf("local variable 'tn'")!== -1)
+                                {
+                                    alert("Device can not reach or Telnet is not enabled, Please check and try again.");
+                                }
+
+                                console.log(e.responseText);
+                            })
+                    ;
+
+                });
+
+                //test chart list after upgrade:
+                $('#btn_chart_list_2').click(function(){
+                    faz_ip = localStorage.getItem(testRunId+'_faz_ip');
+                    faz_adom = localStorage.getItem(testRunId+'_faz_adom');
+                    devid = localStorage.getItem(testRunId+'_devid');
+
+                    //empty chart list
+                    $("#show_chart_right").empty();
+                    //get chart list:
+                    test1_config_obj.getChartList(faz_ip,faz_adom,testRunId,1,devid);
+                });
+
+
+            });
+        });
+    </script>
+
+</head>
+<body>
+
+<div class="ui-layout-north ui-widget-content" style="display: none;">
+    <div style="float: right; margin-right: 160px;">
+        <button onClick="resizeWidgets()">Resize</button>
+        &nbsp;
+        <button onClick="removeUITheme(); myLayout.resizeAll()">Remove Theme</button>
+    </div>
+    <h3>FortiAnalyzer Report Test</h3>
+</div>
+
+<div class="ui-layout-south ui-widget-content ui-state-error" style="display: none;">
+    <div id="loading" style="display: inline-block" height='30px'>
+        <img src="http://i.stack.imgur.com/FhHRx.gif" width="20px" height="20px"/> <span>Loading</span>
+    </div>
+   <span style="display: 'inline-block' ; position:'relative';float: right"> Fortinet QA  @2013</span>
+</div>
+
+<div class="ui-layout-center" style="display: none;">
+
+    <!--<h3 class="ui-widget-header">Report data upload test</h3>-->
+    <!--<div class="modal">dasf&lt;!&ndash; Place at bottom of page &ndash;&gt;</div>-->
+    <div id="start_buttons">
+    <button id='btn_start'>start_test</button><button id='btn_config'>configuration</button>
+    </div>
+
+    <div class="ui-layout-content ui-widget-content" id="layout_center_content">
+
+        <div>
+         <h3>Please select a test run in the left panel firstly</h3>
+        </div>
+
+    </div>
+</div>
+
+<div class="ui-layout-west" style="display: none;">
+    <div id="accordion1" class="basic">
+
+        <h3><a href="#">Upload test</a></h3>
+
+        <div class="container">
+
+            <div class="main demo">
+                <!-- Begin demo markup -->
+                <div>
+                    <ul class="tree">
+                        <li><a><span>Test iterations</span></a>
+                            <ul>
+                                <li><a id='testrun1' class="testrun"><span>FortiAnalyzer 1</span></a></li>
+                                <li><a id='testrun2' class="testrun"><span>FortiAnalyzer 2</span></a></li>
+                                <li><a id='testrun3' class="testrun"><span>FortiAnalyzer 3</span></a></li>
+                                <li><a id='testrun4' class="testrun"><span>FortiAnalyzer 4</span></a></li>
+                                <li><a id='testrun5' class="testrun"><span>FortiAnalyzer 5</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- End demo markup -->
+                <div class="demo-options">
+                    <!-- Begin options markup -->
+                    <div>
+                        <input id="addNode" type="button"  value="Add" />
+                        at index:
+                        <input id="addIndex" type="text" size="3" value="0" />
+                    </div>
+                    <div>
+                        <input id="removeNode" type="button" value="Remove" />
+                        at index:
+                        <input id="removeIndex" type="text" size="3" value="0" />
+                    </div>
+                    <!-- End options markup -->
+                </div>
+            </div>
+            <!--<div class="footer demo-description">-->
+                <!--<p>-->
+                    <!--This sample shows how to dynamically add and remove nodes from the wijtree widget.-->
+                <!--</p>-->
+            <!--</div>-->
+        </div>
+
+        <h3><a href="#">Performance Monitor</a></h3>
+        <div class="container">
+
+            <div class="main demo">
+                <!-- Begin demo markup -->
+                <div>
+                    <ul class="tree">
+                        <li><a><span>Test iterations</span></a>
+                            <ul>
+                                <li><a id='p_testrun1' class="p_testrun"><span>FortiAnalyzer 1</span></a></li>
+                                <li><a id='p_testrun2' class="p_testrun"><span>FortiAnalyzer 2</span></a></li>
+                                <li><a id='p_testrun3' class="p_testrun"><span>FortiAnalyzer 3</span></a></li>
+                                <li><a id='p_testrun4' class="p_testrun"><span>FortiAnalyzer 4</span></a></li>
+                                <li><a id='p_testrun5' class="p_testrun"><span>FortiAnalyzer 5</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!-- End demo markup -->
+
+            </div>
+            <!--<div class="footer demo-description">-->
+            <!--<p>-->
+            <!--This sample shows how to dynamically add and remove nodes from the wijtree widget.-->
+            <!--</p>-->
+            <!--</div>-->
+        </div>
+
+        <h3><a href="#">Section 3</a></h3>
+
+        <div>
+            <p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis.
+                Phasellus pellentesque purus in massa. Aenean in pede.</p>
+
+            <p>Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo,
+                magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.</p>
+            <ul>
+                <li>List item one</li>
+                <li>List item two</li>
+                <li>List item three</li>
+            </ul>
+        </div>
+
+        <h3><a href="#">Section 4</a></h3>
+
+        <div>
+            <p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames
+                ac turpis egestas.</p>
+
+            <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                Aenean lacinia mauris vel est.</p>
+
+            <p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+</body>
+</html> 
